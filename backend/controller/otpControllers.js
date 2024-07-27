@@ -9,13 +9,13 @@ const sendOTPMail = async (email, otp) => {
             secure: true,
             port: 465,
             auth: {
-                user: 'sangamgupta17179@gmail.com',
-                pass: 'ezyz qtzk blxt wbiq',
+                user: 'vjha6545@gmail.com',
+                pass: 'drxc wqol bijx mjqh',
             },
         });
 
         const response = await mailer.sendMail({
-            from: 'sangam@home.cloud.app',
+            from: 'prabhat@home.cloud.app',
             to: email,
             subject: 'OTP', // OTP verification for your account
             html: `
