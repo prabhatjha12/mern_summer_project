@@ -11,6 +11,7 @@ const HomePage = () => {
     const { createFolder } = useCreateFolder();
     const [folderStructure, setFolderStructure] = useState([{ _id: null, name: "Cloud Home" }]);
     const { getFileFolders, fileFolders } = useGetFileFolders();
+    const { isUploadAllowed, uploadFile } = useUploadFile();
 
     const parentFolder = folderStructure[folderStructure.length - 1];
 
@@ -46,7 +47,6 @@ const HomePage = () => {
         setFolderStructure(newFolderStructure);
     };
 
-    const { isUploadAllowed, uploadFile } = useUploadFile();
     const handleFileUpload = async (e) => {
         if (isUploadAllowed) {
             const file = e.target.files;
@@ -61,162 +61,159 @@ const HomePage = () => {
     };
 
     return (
-        <div>
+        <div style={styles.container}>
             <Navbar />
-
-            <div className="homepage-main-container" >
-                <style>
-                    {`
-                    .homepage-main-container {
-                        background-image: url('https://example.com/background.jpg'); /* Replace with your image URL */
-                        background-size: cover;
-                        background-position: center;
-                        min-height: 100vh;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        text-align: center;
-                        padding: 20px;
-                    }
-
-                    .button {
-                        background-color: #4CAF50;
-                        border: none;
-                        color: white;
-                        padding: 15px 32px;
-                        text-align: center;
-                        text-decoration: none;
-                        display: inline-block;
-                        font-size: 16px;
-                        margin: 10px 0;
-                        cursor: pointer;
-                        transition-duration: 0.4s;
-                        border-radius: 8px;
-                        
-                    }
-
-                    .button:hover {
-                        background-color: white;
-                        color: black;
-                        border: 2px solid #4CAF50;
-                    }
-
-                    .input {
-                        width: 100%;
-                        max-width: 300px;
-                        padding: 12px 20px;
-                        margin: 10px 0;
-                        display: inline-block;
-                        border: 1px solid #ccc;
-                        border-radius: 4px;
-                        box-sizing: border-box;
-                    }
-
-                    .file-upload-input {
-                        width: 100%;
-                        max-width: 300px;
-                        padding: 10px;
-                        margin: 10px 0;
-                        display: inline-block;
-                        border: 1px solid #ccc;
-                        border-radius: 4px;
-                        box-sizing: border-box;
-                        transition: border-color 0.3s ease-in-out;
-                    }
-
-                    .file-upload-input:hover {
-                        border-color: #4CAF50;
-                    }
-
-                    .homepage-main-container h3 {
-                        margin-bottom: 20px;
-                    }
-
-                    .homepage-main-container ul {
-                        list-style-type: none;
-                        padding: 0;
-                        display: flex;
-                        gap: 10px;
-                    }
-
-                    .homepage-main-container ul li {
-                        cursor: pointer;
-                        padding: 5px 10px;
-                        border: 1px solid #ccc;
-                        border-radius: 4px;
-                        transition: background-color 0.3s ease-in-out;
-                    }
-
-                    .homepage-main-container ul li:hover {
-                        background-color: #f0f0f0;
-                    }
-
-                    .create-folder-container {
-                        margin: 24px;
-                        padding: 24px;
-                        background-color: #f9f9f9;
-                        border-radius: 8px;
-                        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-                    }
-
-                    .folder-file-item {
-                        background-color: #fafafa;
-                        border: 1px solid grey;
-                        border-radius: 8px;
-                        width: fit-content;
-                        padding: 8px 16px;
-                        margin: 8px 16px;
-                        cursor: pointer;
-                        transition: background-color 0.3s ease-in-out;
-                    }
-
-                    .folder-file-item:hover {
-                        background-color: #e0e0e0;
-                    }
-
-                    .folder-file-item.folder {
-                        background-color: yellow;
-                    }
-
-                    .folder-file-item.file {
-                        background-color: orange;
-                    }
-                    `}
-                </style>
-                <h3>Welcome to Cloud Home</h3>
-                <button className="button" onClick={handleAllowCreateFolder}>Create Folder</button>
-                <input className="file-upload-input input" ref={inputRef} type="file" onChange={handleFileUpload} />
-                <ul>
-                    {folderStructure.map((elem, idx) => {
-                        return <li key={idx} onClick={() => handleBackClick(idx)}>{elem.name}</li>;
-                    })}
+            <div style={styles.mainContainer}>
+                <h3 style={styles.heading}>Welcome to Cloud Home</h3>
+                <button style={styles.button} onClick={handleAllowCreateFolder}>Create Folder</button>
+                <input
+                    style={styles.fileUploadInput}
+                    ref={inputRef}
+                    type="file"
+                    onChange={handleFileUpload}
+                />
+                <ul style={styles.folderList}>
+                    {folderStructure.map((elem, idx) => (
+                        <li
+                            key={idx}
+                            style={styles.breadcrumbItem}
+                            onClick={() => handleBackClick(idx)}
+                        >
+                            {elem.name}
+                        </li>
+                    ))}
                 </ul>
-                <div>
-                    {showCreateFolder && (
-                        <div className="create-folder-container">
-                            <input className="input" value={newFolder} onChange={(e) => setNewFolder(e.target.value)} />
-                            <button className="button" onClick={handleCreateFolder}>Create</button><br></br>
-                            <button className="button" onClick={() => setShowCreateFolder(false)}>Cancel</button>
+                {showCreateFolder && (
+                    <div style={styles.createFolderContainer}>
+                        <input
+                            style={styles.input}
+                            value={newFolder}
+                            onChange={(e) => setNewFolder(e.target.value)}
+                        />
+                        <button style={styles.button} onClick={handleCreateFolder}>Create</button>
+                        <button style={styles.button} onClick={() => setShowCreateFolder(false)}>Cancel</button>
+                    </div>
+                )}
+                <div style={styles.fileList}>
+                    {fileFolders.map((elem) => (
+                        <div
+                            key={elem._id}
+                            style={elem.type === "folder" ? styles.folderItem : styles.fileItem}
+                            onDoubleClick={() => handleDoubleClick(elem)}
+                        >
+                            <p>{elem.name}</p>
                         </div>
-                    )}
-                </div>
-                <div>
-                    {fileFolders.map((elem) => {
-                        return (
-                            <div
-                                key={elem._id}
-                                className={`folder-file-item ${elem.type === "folder" ? "folder" : "file"}`}
-                                onDoubleClick={() => handleDoubleClick(elem)}
-                            >
-                                <p>{elem.name}</p>
-                            </div>
-                        );
-                    })}
+                    ))}
                 </div>
             </div>
         </div>
     );
+};
+
+const styles = {
+    container: {
+        fontFamily: 'Arial, sans-serif',
+        minHeight: '100vh',
+        background: '#f4f7f6',
+    },
+    mainContainer: {
+        backgroundImage: 'url("https://example.com/background.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        padding: '20px',
+        borderRadius: '12px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        width: '90%',
+        maxWidth: '1200px',
+        margin: '40px auto',
+        textAlign: 'center',
+    },
+    heading: {
+        marginBottom: '20px',
+        color: '#333',
+        fontSize: '24px',
+    },
+    button: {
+        backgroundColor: '#4CAF50',
+        border: 'none',
+        color: '#fff',
+        padding: '12px 24px',
+        textAlign: 'center',
+        textDecoration: 'none',
+        display: 'inline-block',
+        fontSize: '16px',
+        margin: '10px 0',
+        cursor: 'pointer',
+        borderRadius: '8px',
+        transition: 'background-color 0.3s',
+    },
+    buttonHover: {
+        backgroundColor: '#45a049',
+    },
+    input: {
+        width: '100%',
+        maxWidth: '400px',
+        padding: '12px',
+        margin: '10px 0',
+        borderRadius: '8px',
+        border: '1px solid #ddd',
+        boxSizing: 'border-box',
+    },
+    fileUploadInput: {
+        width: '100%',
+        maxWidth: '400px',
+        padding: '10px',
+        margin: '10px 0',
+        borderRadius: '8px',
+        border: '1px solid #ddd',
+        transition: 'border-color 0.3s',
+    },
+    folderList: {
+        listStyleType: 'none',
+        padding: '0',
+        margin: '20px 0',
+        display: 'flex',
+        gap: '10px',
+        justifyContent: 'center',
+    },
+    breadcrumbItem: {
+        cursor: 'pointer',
+        padding: '8px 16px',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        transition: 'background-color 0.3s',
+    },
+    createFolderContainer: {
+        margin: '20px auto',
+        padding: '20px',
+        backgroundColor: '#fff',
+        borderRadius: '8px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        maxWidth: '400px',
+    },
+    fileList: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
+    folderItem: {
+        backgroundColor: '#f0f8ff',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        padding: '10px',
+        margin: '10px',
+        cursor: 'pointer',
+        transition: 'background-color 0.3s',
+    },
+    fileItem: {
+        backgroundColor: '#fff3e0',
+        border: '1px solid #ddd',
+        borderRadius: '8px',
+        padding: '10px',
+        margin: '10px',
+        cursor: 'pointer',
+        transition: 'background-color 0.3s',
+    },
 };
 
 export default HomePage;
