@@ -1,0 +1,1 @@
+export const BACKEND_URL="https://cloud-home-lmc8.onrender.com"
